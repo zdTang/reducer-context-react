@@ -5,6 +5,8 @@ import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 
 const Login = (props) => {
+  console.log("login.js reloaded !");
+
   const [enteredEmail, setEnteredEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState("");
@@ -15,27 +17,21 @@ const Login = (props) => {
   // so that whatever user inputs Email or Password
   // Each key stroke will trigger setFromIsValid() to check if Button should be open
 
+  useEffect(() => {
+    console.log("in useEffect");
+    setFormIsValid(
+      enteredEmail.includes("@") && enteredPassword.trim().length > 6
+    );
+  }, [enteredEmail, enteredPassword]);
+
   const emailChangeHandler = (event) => {
     console.log("in emailChangeHandler");
     setEnteredEmail(event.target.value);
-
-    //Each key stroke will trigger this method.   too much !
-    setFormIsValid(() => {
-      console.log("in emailChangeHandler==setFormIsValid");
-      return (
-        event.target.value.includes("@") && enteredPassword.trim().length > 6
-      );
-    });
   };
 
   const passwordChangeHandler = (event) => {
     console.log("in passwordChangeHandler");
     setEnteredPassword(event.target.value);
-    //Each key stroke will trigger this method.   too much !
-    setFormIsValid(() => {
-      console.log("in passwordChangeHandler==setFormIsValid");
-      return event.target.value.trim().length > 6 && enteredEmail.includes("@");
-    });
   };
 
   const validateEmailHandler = () => {
