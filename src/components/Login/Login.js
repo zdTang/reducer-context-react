@@ -17,12 +17,27 @@ const Login = (props) => {
   // so that whatever user inputs Email or Password
   // Each key stroke will trigger setFromIsValid() to check if Button should be open
 
+  // debounce
   useEffect(() => {
     console.log("in useEffect");
-    setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
-    );
+    const identifier = setTimeout(() => {
+      // Be aware that the setTimeout() need a function definition here
+      console.log("check validition");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 1000);
+    // cleanup function
+    // it will run when the component un-mount from the DOM,(component is removed)
+    // Or just before next useEffect run
+    // but it will not run before the first useEffect function
+    return () => {
+      console.log("clean up");
+      clearTimeout(identifier); //   clear the last timer !!!
+    };
   }, [enteredEmail, enteredPassword]);
+
+  //setFormIsValid will run only enteredEmail or enteredPassword updated
 
   const emailChangeHandler = (event) => {
     console.log("in emailChangeHandler");
