@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
 
 function App() {
+  console.log("App loaded");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const storedUserLoggedInInformation = localStorage.getItem("isLoggedIn");
-  if (storedUserLoggedInInformation === "1") {
-    setIsLoggedIn(true);
-  }
+
+  // Be aware of this useEffect will only run after the Render !!
+  // and only if the dependency has been updated
+
+  useEffect(() => {
+    if (storedUserLoggedInInformation === "1") {
+      console.log("useEffect!");
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const loginHandler = (email, password) => {
     // We should of course check email and password
@@ -20,7 +29,10 @@ function App() {
 
   const logoutHandler = () => {
     setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
   };
+
+  console.log("begin to render");
 
   return (
     <React.Fragment>
