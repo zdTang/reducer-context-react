@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
@@ -58,36 +58,41 @@ const Login = (props) => {
   });
 
   console.log("State: ", emailState, passwordState);
-  console.log("form valid: ", formIsValid);
+  console.log("formIsValid: ", formIsValid);
   //  one event trigger two states, which is not a good approach
 
-  const emailChangeHandler = (event) => {
-    //setEnteredEmail(event.target.value);
-    dispatchEmail({ type: "USER_INPUT_EMAIL", val: event.target.value });
+  // useEffect like this way
+  // can guarantee the state we rely on will be the latest state
+  // it also avoid extra checking form validity. for instance, once the password is more than 6
+  // the useEffect will not check again  as the True will not change again.
 
-    setFormIsValid(() => {
-      console.log("email set form");
-      return emailState.isValid && passwordState.isValid;
-    });
+  /* use Alias to represent part of destruction */
+  const { isValid: emailIsValid } = emailState; // emailIsValid is alias of isValid
+  const { isValid: passwordIsValid } = passwordState; // passwordIsValid is alias of isValid
+
+  useEffect(() => {
+    console.log("in useEffect");
+    //setFormIsValid(emailState.isValid && passwordState.isValid);    // it works like a charm
+    setFormIsValid(emailIsValid && passwordIsValid);
+    return () => {
+      console.log("clean up"); //   clear the last timer !!!
+    };
+    //}, [emailState.isValid, passwordState.isValid]);                // it works like a charm, i prefer this way!
+  }, [emailIsValid, passwordIsValid]);
+
+  const emailChangeHandler = (event) => {
+    dispatchEmail({ type: "USER_INPUT_EMAIL", val: event.target.value });
   };
 
   const passwordChangeHandler = (event) => {
-    //setEnteredPassword(event.target.value);
     dispatchPassword({ type: "USER_INPUT_PASSWORD", val: event.target.value });
-
-    setFormIsValid(() => {
-      console.log("password set form!");
-      return emailState.isValid && passwordState.isValid;
-    });
   };
 
   const validateEmailHandler = () => {
-    //setEmailIsValid(emailState.value.includes("@"));
     dispatchEmail({ type: "INPUT_BLUR_EMAIL" });
   };
 
   const validatePasswordHandler = () => {
-    //setPasswordIsValid(enteredPassword.trim().length > 6);
     dispatchPassword({ type: "INPUT_BLUR_PASSWORD" });
   };
 
