@@ -1,17 +1,8 @@
-import React, { useState, useEffect } from "react";
-
-// this file is used to add default value of Context
-// use function type here to tell intellisense
-const AuthContext = React.createContext({
-  isLoggedIn: false,
-  onLogout: () => {},
-  onLogin: (email, password) => {},
-});
-
 /// This Component will wrap all stuff
 /// Actually ,this component can be moved to other where!
-
-export const AuthContextProvider = (props) => {
+import React, { useState, useEffect } from "react";
+import AuthContext from "../src/store/auth-context";
+const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -48,4 +39,4 @@ export const AuthContextProvider = (props) => {
   );
 };
 
-export default AuthContext;
+export default AuthContextProvider;
