@@ -35,7 +35,7 @@ function App() {
   //console.log("begin to render");
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn: true }}>
+    <AuthContext.Provider value={{ isLoggedIn: true, onLogout: logoutHandler }}>
       <MainHeader onLogout={logoutHandler} />
       <main>
         {!isLoggedIn && <Login onLogin={loginHandler} />}
