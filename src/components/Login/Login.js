@@ -12,10 +12,10 @@ const emailReducer = (state, action) => {
   console.log("state: ", state);
   console.log("action: ", action);
 
-  if (action.type === "USER_INPUT") {
+  if (action.type === "USER_INPUT_EMAIL") {
     return { value: action.val, isValid: action.val.includes("@") };
   }
-  if (action.type === "INPUT_BLUR") {
+  if (action.type === "INPUT_BLUR_EMAIL") {
     return { value: state.value, isValid: state.value.includes("@") };
   }
   return { value: "", isValid: false }; // default state
@@ -27,11 +27,11 @@ const passwordReducer = (state, action) => {
   console.log("state: ", state);
   console.log("action: ", action);
 
-  if (action.type === "USER_INPUT") {
-    return { value: action.val, isValid: action.val.trim().length > 6 };
+  if (action.type === "USER_INPUT_PASSWORD") {
+    return { value: action.val.trim(), isValid: action.val.trim().length > 6 };
   }
-  if (action.type === "INPUT_BLUR") {
-    return { value: state.value, isValid: state.trim().length > 6 };
+  if (action.type === "INPUT_BLUR_PASSWORD") {
+    return { value: state.value, isValid: state.value.length > 6 };
   }
   return { value: "", isValid: false }; // default state
 };
@@ -42,10 +42,7 @@ const passwordReducer = (state, action) => {
 
 const Login = (props) => {
   console.log("Login loaded !");
-  //const [enteredEmail, setEnteredEmail] = useState("");
-  //const [emailIsValid, setEmailIsValid] = useState();
-  // const [enteredPassword, setEnteredPassword] = useState("");
-  // const [passwordIsValid, setPasswordIsValid] = useState();
+
   const [formIsValid, setFormIsValid] = useState(false);
 
   // email state
@@ -61,30 +58,37 @@ const Login = (props) => {
   });
 
   console.log("State: ", emailState, passwordState);
+  console.log("form valid: ", formIsValid);
   //  one event trigger two states, which is not a good approach
 
   const emailChangeHandler = (event) => {
     //setEnteredEmail(event.target.value);
-    dispatchEmail({ type: "USER_INPUT", val: event.target.value });
+    dispatchEmail({ type: "USER_INPUT_EMAIL", val: event.target.value });
 
-    setFormIsValid(emailState.isValid && passwordState.isValid);
+    setFormIsValid(() => {
+      console.log("email set form");
+      return emailState.isValid && passwordState.isValid;
+    });
   };
 
   const passwordChangeHandler = (event) => {
     //setEnteredPassword(event.target.value);
-    dispatchPassword({ type: "USER_INPUT", val: event.target.value });
+    dispatchPassword({ type: "USER_INPUT_PASSWORD", val: event.target.value });
 
-    setFormIsValid(emailState.isValid && passwordState.isValid);
+    setFormIsValid(() => {
+      console.log("password set form!");
+      return emailState.isValid && passwordState.isValid;
+    });
   };
 
   const validateEmailHandler = () => {
     //setEmailIsValid(emailState.value.includes("@"));
-    dispatchEmail({ type: "INPUT_BLUR" });
+    dispatchEmail({ type: "INPUT_BLUR_EMAIL" });
   };
 
   const validatePasswordHandler = () => {
     //setPasswordIsValid(enteredPassword.trim().length > 6);
-    dispatchPassword({ type: "INPUT_BLUR" });
+    dispatchPassword({ type: "INPUT_BLUR_PASSWORD" });
   };
 
   const submitHandler = (event) => {
