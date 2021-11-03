@@ -32,7 +32,7 @@ function App() {
     localStorage.removeItem("isLoggedIn");
   };
 
-  console.log("begin to render");
+  //console.log("begin to render");
 
   return (
     <React.Fragment>
