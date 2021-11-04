@@ -1,7 +1,8 @@
-import React, { useRef, useImperativeHandle } from 'react';
+import React, { useRef, useImperativeHandle } from "react";
 
-import classes from './Input.module.css';
+import classes from "./Input.module.css";
 
+/// A special way to pass REF from Parent to here
 const Input = React.forwardRef((props, ref) => {
   const inputRef = useRef();
 
@@ -9,6 +10,7 @@ const Input = React.forwardRef((props, ref) => {
     inputRef.current.focus();
   };
 
+  // use ref from Parent component !
   useImperativeHandle(ref, () => {
     return {
       focus: activate,
@@ -18,7 +20,7 @@ const Input = React.forwardRef((props, ref) => {
   return (
     <div
       className={`${classes.control} ${
-        props.isValid === false ? classes.invalid : ''
+        props.isValid === false ? classes.invalid : ""
       }`}
     >
       <label htmlFor={props.id}>{props.label}</label>
